@@ -1,24 +1,14 @@
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["099720109477"] # Canonical
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
-  }
-}
-
-
-resource "aws_instance" "librenms" {
-  ami                    = data.aws_ami.ubuntu.id
-  instance_type          = var.instance_type
-  key_name               = var.key_name
-  vpc_security_group_ids = [aws_security_group.librenms_sg.id]
-
-
+resource "aws_instance" "jenkinsserver2" {
+  #ami                         = data.aws_ami.latest-amazon-linux-image.id
+  ami                         = var.ami
+  instance_type               = var.instance_type
+  key_name                    = "Timtee"
+  subnet_id                   = aws_subnet.myapp-subnet-1.id
+  vpc_security_group_ids      = [aws_default_security_group.default-sg.id]
+  availability_zone           = var.avail_zone
+  associate_public_ip_address = true
+  user_data                   = file("install-librenms.sh")
   tags = {
-    Name = "librenms-server"
+    Name = "${var.env_prefix}-librenms-server"
   }
-
-
-  user_data = file("user-data/librenms-init.sh")
 }
