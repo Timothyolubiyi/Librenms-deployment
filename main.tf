@@ -1,4 +1,4 @@
-resource "aws_instance" "jenkinsserver2" {
+resource "aws_instance" "librenmsserver" {
   #ami                         = data.aws_ami.latest-amazon-linux-image.id
   ami                         = var.ami
   instance_type               = var.instance_type
